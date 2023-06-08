@@ -21,7 +21,7 @@ This module requires **make** and **docker** installed and configured for your u
 ### Building
 To build libadore run the following:
 ```bash
-make
+make build
 ```
 
 ### Testing
