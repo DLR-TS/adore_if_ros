@@ -247,7 +247,6 @@ namespace adore
             bool accelerationActive_initialized_;
             bool left_indicator_initialized_;
             bool right_indicator_initialized_;
-            bool checkpointClearance_initialized_;
             bool changed_;
             adore::fun::VehicleExtendedState data_;
 
@@ -290,7 +289,7 @@ namespace adore
             void receive_checkpointClearance(std_msgs::BoolConstPtr msg)
             {
                 data_.setCheckpointClearance(msg->data);
-                checkpointClearance_initialized_ = true;
+                // initialized value omitted on purpose. It is not needed and it led to some problems.
                 changed_ = true;
             }
 
@@ -310,7 +309,6 @@ namespace adore
                                 accelerationActive_initialized_(false),
                                 left_indicator_initialized_(false),
                                 right_indicator_initialized_(false),
-                                checkpointClearance_initialized_(false),
                                 changed_(false)
             {
                 bool no_delay;
@@ -325,7 +323,7 @@ namespace adore
             }
             virtual bool hasData() const override
             {
-                return gear_initialized_ && steering_initialized_ && acceleration_initialized_ && accelerationActive_initialized_ && left_indicator_initialized_ && right_indicator_initialized_ && checkpointClearance_initialized_;
+                return gear_initialized_ && steering_initialized_ && acceleration_initialized_ && accelerationActive_initialized_ && left_indicator_initialized_ && right_indicator_initialized_;
             }
             virtual bool hasUpdate() const override
             {
