@@ -31,13 +31,16 @@ import adore_if_ros_msg.msg
 
 class Clearing:
     def __init__(self):
-        vehicle_clearance_topic = "/VEH/Checkpoints/clearance"
+        vehicle_clearance_topic = "/vehicle1/VEH/Checkpoints/clearance"
         self.pub = rospy.Publisher(vehicle_clearance_topic, Bool, queue_size=10)
 
     def on_timer_elapsed(self,event):
         self.pub.publish(Bool(True))
         print("cleared at " + str(rospy.get_time()))
-
+        r = rospy.Rate(100)
+        for i in range(0,100):
+            self.pub.publish(Bool(True))
+            r.sleep()
 
 if __name__ == '__main__':
     rospy.init_node('adore_timed_checkpoint_release', anonymous=True)
