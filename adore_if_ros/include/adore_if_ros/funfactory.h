@@ -303,6 +303,14 @@ namespace adore
                                       std_msgs::BoolPtr,
                                       StdConverter>(n_, "FUN/ForceSlowManeuvers", 1);
                 }
+                //read halt automation msgs
+                virtual adore::mad::AReader<bool>* getHaltAutomationReader() override
+                {
+                    return new Reader<bool,
+                                      std_msgs::BoolPtr,
+                                      StdConverter>(n_, "FUN/HaltAutomation", 1);
+                }
+
             };          
     } // namespace if_ROS
 } // namespace adore
