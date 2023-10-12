@@ -16,7 +16,9 @@
 
 #include <adore_if_ros_scheduling/baseapp.h>
 #include <adore_if_ros/factorycollection.h>
-#include <adore/apps/lqr_platoon_controller.h>
+//#include <adore/apps/localizationmodel.h>
+#include <adore/apps/lqr.h>
+
 
 namespace adore
 {
@@ -25,17 +27,17 @@ namespace adore
         class LQRPlatoonNode : public FactoryCollection, public adore_if_ros_scheduling::Baseapp
         {
         public:
-            adore::apps::LQRPlatoonController *controller_;
+            adore::apps::LQR *controller_;
             LQRPlatoonNode() {}
             void init(int argc, char **argv, double rate, std::string nodename)
             {
                 Baseapp::init(argc, argv, rate, nodename);
                 Baseapp::initSim();
                 FactoryCollection::init(getRosNodeHandle());
-                controller_ = new adore::apps::GapProvider();
+                controller_ = new adore::apps::LQR();
 
                 // timer callbacks
-                std::function<void()> run_fcn(std::bind(&adore::apps::GapProvider::update, controller_));
+                std::function<void()> run_fcn(std::bind(&adore::apps::LQR::run, controller_));
                 Baseapp::addTimerCallback(run_fcn);
             }
         };
