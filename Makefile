@@ -25,6 +25,9 @@ set_env:
 	$(eval PROJECT := ${ADORE_IF_ROS_PROJECT}) 
 	$(eval TAG := ${ADORE_IF_ROS_TAG})
 
+.PHONY: build_develop
+build_develop: set_env _build docker_cp
+
 .PHONY: _build
 _build:
 	docker build --tag ${PROJECT}:${TAG} \

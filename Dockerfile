@@ -34,7 +34,7 @@ COPY ${PROJECT} /tmp/${PROJECT}/${PROJECT}
 
 FROM adore_if_ros_requirements_base AS adore_if_ros_external_library_requirements_base
 
-ARG INSTALL_PREFIX=/tmp/${PROJECT}/${PROJECT}/build/install
+ARG INSTALL_PREFIX=/tmp/${PROJECT}/${PROJECT}/build/devel
 RUN mkdir -p "${INSTALL_PREFIX}"
 
 ARG LIB=adore_if_ros_msg
@@ -73,15 +73,19 @@ RUN cmake --install . --prefix ${INSTALL_PREFIX}
 FROM adore_if_ros_external_library_requirements_base AS adore_if_ros_builder
 
 ARG PROJECT
+ARG INSTALL_PREFIX=/tmp/${PROJECT}/${PROJECT}/build/devel
 
 SHELL ["/bin/bash", "-c"]
 WORKDIR /tmp/${PROJECT}/${PROJECT}/build
-RUN source /opt/ros/noetic/setup.bash && \
+
+RUN ln -sf devel install && \
+    source /opt/ros/noetic/setup.bash && \
     cmake .. \
              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
              -DCMAKE_BUILD_TYPE=Release \
-             -DCMAKE_INSTALL_PREFIX="install" && \
-    cmake --build . -v --config Release --target install -- -j $(nproc) 
+             -DCMAKE_INSTALL_PREFIX="devel" && \
+    cmake --build . -v -- -j $(nproc)
+    #cmake --build . -v --config Release --target install -- -j $(nproc) || true
 
 
 #FROM alpine:3.14 AS adore_if_ros_package

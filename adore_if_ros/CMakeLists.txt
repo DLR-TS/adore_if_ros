@@ -267,15 +267,15 @@ catkin_package(
 
 message(${catkin_INCLUDE_DIRS})
 
-add_executable(adore_vehiclemodel_node)
-target_sources(adore_vehiclemodel_node PRIVATE src/adore_vehiclemodel_node.cpp)
+add_executable(adore_vehicle_model_node)
+target_sources(adore_vehicle_model_node PRIVATE src/adore_vehicle_model_node.cpp)
 target_include_directories( 
-    adore_vehiclemodel_node 
+    adore_vehicle_model_node 
       PRIVATE include 
         ${catkin_INCLUDE_DIRS}
 )
 target_link_libraries(
-    adore_vehiclemodel_node 
+    adore_vehicle_model_node 
       PRIVATE 
         ${catkin_LIBRARIES} 
         libadore::sim 
@@ -1139,7 +1139,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 # )
 install(
   TARGETS 
-    adore_vehiclemodel_node
+    adore_vehicle_model_node
     adore_odometrymodel_node
     adore_localizationmodel_node
     adore_objectdetectionmodel_node
