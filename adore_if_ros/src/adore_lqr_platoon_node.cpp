@@ -34,7 +34,7 @@ namespace adore
                 Baseapp::init(argc, argv, rate, nodename);
                 Baseapp::initSim();
                 FactoryCollection::init(getRosNodeHandle());
-                controller_ = new adore::apps::LQR();
+                controller_ = new adore::apps::LQR(getRosNodeHandle());
 
                 // timer callbacks
                 std::function<void()> run_fcn(std::bind(&adore::apps::LQR::run, controller_));
@@ -47,7 +47,7 @@ namespace adore
 int main(int argc, char **argv)
 {
     auto node = new adore::if_ROS::LQRPlatoonNode();
-    node->init(argc, argv, 10.0, "gap_provider");   
+    node->init(argc, argv, 10, "lqr_platoon_Node");   
     node->run();
     return 0;
 }
