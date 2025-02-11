@@ -25,12 +25,12 @@ namespace adore
     {
       public:
       adore::apps::TrajectoryPlannerALC* planner_;
-      void init(int argc, char **argv, double rate, std::string nodename,bool directionLeft,std::string name,int id,double speed_scale,double lateral_i_grid,double const_penalty,bool em_continue_active,bool em_cancel_active)
+      void init(int argc, char **argv, double rate, std::string nodename,bool directionLeft,std::string name,int id,double speed_scale,double lateral_i_grid,double const_penalty,bool em_continue_active,bool em_cancel_active, int ignore_id)
       {
         Baseapp::init(argc, argv, rate, nodename);
         Baseapp::initSim();
         FactoryCollection::init(getRosNodeHandle());
-        planner_ = new adore::apps::TrajectoryPlannerALC(directionLeft,name,id,lateral_i_grid);
+        planner_ = new adore::apps::TrajectoryPlannerALC(directionLeft,name,id,ignore_id,lateral_i_grid);
         planner_->setSpeedScale(speed_scale);
         planner_->setConstPenalty(const_penalty);
         planner_->setEMContinueActive(em_continue_active);
@@ -110,7 +110,12 @@ int main(int argc,char **argv)
         ROS_DEBUG("No em_cancel_active penalty given to adore_trajectory_planner_alc_node node.");
         ROS_DEBUG("Optionally supply boolean em_cancel_active <param name='em_cancel_active' type='bool' value='true'/> to activate planning of emergency maneuvers that cancel lane change.");
     }
-    lcn.init(argc, argv, 100.0, "adore_trajectory_planner_alc_node",direction.compare("left")==0,name,id,speed_scale,lateral_i_grid,const_penalty,em_continue_active,em_cancel_active);
+    int ignore_id = -1;
+    if(!nh.getParam("ignore_id",ignore_id))
+    {
+        //do nothing
+    }
+    lcn.init(argc, argv, 100.0, "adore_trajectory_planner_alc_node",direction.compare("left")==0,name,id,speed_scale,lateral_i_grid,const_penalty,em_continue_active,em_cancel_active,ignore_id);
     lcn.run();
     return 0;
 }
