@@ -25,7 +25,7 @@ namespace adore
     {
       public:
       adore::apps::TrajectoryPlannerLF* planner_;
-      void init(int argc, char **argv, double rate, std::string nodename, std::string name,int id,double speed_scale,double lateral_i_grid,int stop_point_id,double const_penalty)
+      void init(int argc, char **argv, double rate, std::string nodename, std::string name,int id,double speed_scale,double lateral_i_grid,int stop_point_id,double const_penalty, int advCoercDetection, double minHeadway)
       {
         Baseapp::init(argc, argv, rate, nodename);
         Baseapp::initSim();
@@ -34,6 +34,8 @@ namespace adore
         planner_->setSpeedScale(speed_scale);
         planner_->setStopPoint(stop_point_id);
         planner_->setConstPenalty(const_penalty);
+        planner_->setMinHeadway(minHeadway);
+        planner_->setAdvancedCoercionDetection(advCoercDetection);
 
         ros::NodeHandle nh("~");
         bool use_scheduler = false;
@@ -88,6 +90,18 @@ int main(int argc,char **argv)
         ROS_DEBUG("No stop_point_id given to adore_trajectory_planner_lf_node node.");
         ROS_DEBUG("Supply stop_point_id\\in\\mathbb{Z} <param name='stop_point_id' type='int' value='0'/> to parametrize planner to stop at next (0) following (1) etc. or no (-1) conflict point");
     }
+    int advCoercionDetection = -1;
+    if(!nh.getParam("advanced_coercion_detection",advCoercionDetection))
+    {
+        ROS_DEBUG("No stop_point_id given to adore_trajectory_planner_lf_node node.");
+        ROS_DEBUG("Supply stop_point_id\\in\\mathbb{Z} <param name='stop_point_id' type='int' value='0'/> to parametrize planner to stop at next (0) following (1) etc. or no (-1) conflict point");
+    }
+    double min_headway = 0.0;
+    if(!nh.getParam("min_headway",min_headway))
+    {
+        ROS_DEBUG("No const penalty given to adore_trajectory_planner_lf_node node.");
+        ROS_DEBUG("Supply const_penalty\\in\\mathbb{R} <param name='const_penalty' type='double' value='0.1'/> to set const_penalty cost term in planning results to given value.");
+    }
     double const_penalty = 0.0;
     if(!nh.getParam("const_penalty",const_penalty))
     {
@@ -96,7 +110,7 @@ int main(int argc,char **argv)
     }
 
     adore::if_ROS::TrajectoryPlannerLFNode lfn;
-    lfn.init(argc, argv, 100.0, "adore_trajectory_planner_lf_node",name,id,speed_scale,lateral_i_grid,stop_point_id,const_penalty);/* (rate only affects polling when use_scheduler==true) */
+    lfn.init(argc, argv, 100.0, "adore_trajectory_planner_lf_node",name,id,speed_scale,lateral_i_grid,stop_point_id,const_penalty,advCoercionDetection,min_headway);/* (rate only affects polling when use_scheduler==true) */
     lfn.run();
     return 0;
 }
